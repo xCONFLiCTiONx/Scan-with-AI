@@ -1,0 +1,6 @@
+- [x] Update `popup.html` with "Deep Scan (Full History)" toggle
+- [x] Ensure `gemini.js` is the source of truth for Gemini 3.5 Flash Lite
+- [x] Clean up redundant `GeminiAnalyzer` in `authentication_checker.js`
+- [x] Implement Deep Scan (Scroll & Capture) logic in `popup.js`
+- [x] Update `content.js` overlay with Deep Scan settings
+- [x] Verify Deep Scan and model defaults

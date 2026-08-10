@@ -1,0 +1,253 @@
+<!-- popup.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scan with AI</title>
+  <style>
+    body {
+      width: 360px;
+      padding: 18px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.3px;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+    }
+    p {
+      font-size: 13px;
+      color: #9aa0a6;
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #8ab4f8;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      background: #252526;
+      border: 1px solid #333333;
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    input[type="password"]:focus {
+      border-color: #8ab4f8;
+    }
+    button {
+      width: 100%;
+      padding: 11px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      box-sizing: border-box;
+      transition: background-color 0.2s;
+    }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    #scan-btn {
+      background-color: #8ab4f8;
+      color: #202124;
+      margin-bottom: 12px;
+    }
+    #save-btn {
+      background-color: #2d2d2d;
+      color: #e0e0e0;
+      border: 1px solid #3d3d3d;
+    }
+    #saved-key-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #9aa0a6;
+    }
+    #saved-key-label {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #remove-key-btn {
+      background: transparent;
+      border: 1px solid #3d3d3d;
+      color: #e0e0e0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color 0.2s;
+      display: none;
+    }
+    #remove-key-btn:hover {
+      background: #333333;
+    }
+    #api-key-save-status {
+      font-size: 12px;
+      margin: 10px 0 0 0;
+      min-height: 18px;
+      text-align: center;
+    }
+    #api-version {
+      font-size: 12px;
+      color: #9aa0a6;
+      margin: 8px 0 12px 0;
+      min-height: 18px;
+    }
+    #status-msg {
+      margin-top: 10px;
+      font-size: 12px;
+      text-align: center;
+      min-height: 18px;
+    }
+    .settings-group {
+      margin-top: 16px;
+      border-top: 1px solid #333333;
+      padding-top: 16px;
+    }
+    select, input[type="number"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: #252526;
+      border: 1px solid #333333;
+      border-radius: 6px;
+      color: #ffffff;
+      font-size: 13px;
+      outline: none;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    select:focus, input[type="number"]:focus, textarea:focus {
+      border-color: #8ab4f8;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    #response-view {
+      display: none;
+    }
+    #response-content {
+      background: #252526;
+      border: 1px solid #333333;
+      border-radius: 10px;
+      padding: 14px;
+      color: #e0e0e0;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-top: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: #5f6773 #1e1e1e;
+    }
+    #response-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    #response-content::-webkit-scrollbar-track {
+      background: #1e1e1e;
+      border-radius: 999px;
+    }
+    #response-content::-webkit-scrollbar-thumb {
+      background: #5f6773;
+      border-radius: 999px;
+      border: 2px solid #1e1e1e;
+    }
+    #response-content::-webkit-scrollbar-thumb:hover {
+      background: #7c8795;
+    }
+    #back-btn {
+      background-color: transparent;
+      color: #8ab4f8;
+      border: 1px solid #3d3d3d;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="start-view">
+    <h2>Scan with AI</h2>
+    <p>Scan page content and analyze details using Gemini.</p>
+
+    <button id="scan-btn" disabled>Scan Page</button>
+
+    <div class="settings-group">
+      <h3>Scan Settings</h3>
+
+      <label for="scan-depth">Scan Depth</label>
+      <select id="scan-depth">
+        <option value="frontend">Visible Text (Frontend)</option>
+        <option value="backend">HTML Source (Backend)</option>
+      </select>
+
+      <label for="char-cap">Character Cap</label>
+      <input id="char-cap" type="number" value="20000" step="1000" min="100" max="500000" />
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <input id="smart-distill" type="checkbox" style="width: auto; margin: 0;" />
+        <label for="smart-distill" style="margin: 0; text-transform: none; font-size: 13px; color: #e0e0e0; cursor: pointer;">Smart Distillation (Map-Reduce)</label>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <input id="deep-scan" type="checkbox" style="width: auto; margin: 0;" />
+        <label for="deep-scan" style="margin: 0; text-transform: none; font-size: 13px; color: #e0e0e0; cursor: pointer;">Deep Scan (Full History Capture)</label>
+      </div>
+      <p style="font-size: 11px; margin-top: -8px; margin-bottom: 12px;">Stitches together conversation history by programmatically scrolling. Bypasses truncation for maximum context.</p>
+
+      <label for="custom-prompt">Custom Scan Prompt (Optional)</label>
+      <textarea id="custom-prompt" placeholder="e.g. Focus on security details or summarize the last few messages..."></textarea>
+    </div>
+
+    <label for="api-key-input">Gemini API Key</label>
+    <input id="api-key-input" type="password" placeholder="Enter a new Gemini API key to save" />
+    <button id="save-btn" disabled>Save API Key</button>
+    <div id="saved-key-area">
+      <span id="saved-key-label">No API key saved.</span>
+      <button id="remove-key-btn" type="button">Remove saved key</button>
+    </div>
+    <div id="api-key-save-status" aria-live="polite"></div>
+    <div id="api-version" aria-live="polite"></div>
+    <div id="status-msg" aria-live="polite"></div>
+  </div>
+
+  <div id="response-view">
+    <h3>Gemini Response</h3>
+    <div id="response-content"></div>
+    <button id="back-btn">Back to Home</button>
+  </div>
+
+  <script src="gemini.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
