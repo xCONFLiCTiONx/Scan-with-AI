@@ -1,2 +1,18 @@
-.artifacts
-.idea
+# IDE and temporary files
+.idea/
+.artifacts/
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.db
+*.sqlite
+
+# OS generated files
+Icon?
+ehthumbs.db
+
+# Optional local config
+.env
+config.local.js
